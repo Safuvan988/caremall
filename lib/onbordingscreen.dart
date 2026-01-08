@@ -1,4 +1,4 @@
-import 'package:caremall/loginpage.dart'; // Ensure this path matches your project structure
+import 'package:caremall/loginpage.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingContent {
@@ -45,7 +45,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ),
   ];
 
-  /// Helper method to handle navigation to the Login Page
   void _navigateToLogin() {
     Navigator.pushReplacement(
       context,
@@ -62,7 +61,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Onboarding Content Area
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -74,7 +72,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-            // Bottom Navigation Bar (Dots, Next/Get Started, Skip)
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 24.0,
@@ -83,7 +80,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // 1. Page Indicators (Dots)
                   Row(
                     children: List.generate(
                       _pages.length,
@@ -91,7 +87,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
 
-                  // 2. Primary Action Button (Next / Get Started)
                   TextButton(
                     onPressed: () {
                       if (isLastPage) {
@@ -113,7 +108,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Text(isLastPage ? 'Get Started' : 'Next'),
                   ),
 
-                  // 3. Skip Button (Modified to go directly to Login)
                   Opacity(
                     opacity: isLastPage ? 0.0 : 1.0,
                     child: TextButton(

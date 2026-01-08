@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:caremall/loginpage.dart';
 import 'package:caremall/savedaddressesscreen.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,8 @@ import 'package:caremall/editprofile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final VoidCallback onAddressChanged;
+  const ProfilePage({super.key, required this.onAddressChanged});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -15,6 +17,39 @@ class _ProfilePageState extends State<ProfilePage> {
   String _selectedLanguage = "English";
   String _userName = "Full Name";
   String _userPhone = "Number";
+  File? _userImageFile;
+
+  void _showFullScreenImage(BuildContext context, File image) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => Scaffold(
+              backgroundColor: Colors.black,
+              appBar: AppBar(
+                backgroundColor: Colors.black,
+                iconTheme: const IconThemeData(color: Colors.white),
+                elevation: 0,
+              ),
+              body: Center(
+                child: Hero(
+                  tag: 'profile_pic',
+                  child: InteractiveViewer(
+                    panEnabled: true,
+                    minScale: 0.5,
+                    maxScale: 4.0,
+                    child: Image.file(
+                      image,
+                      fit: BoxFit.contain,
+                      width: MediaQuery.of(context).size.width,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -24,11 +59,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
+    String? imagePath = prefs.getString('userImage');
     setState(() {
       _userName = prefs.getString('userName') ?? "Full Name";
       _userPhone = prefs.getString('userPhone') ?? "No Number";
       _selectedLanguage = prefs.getString('language') ?? "English";
     });
+
+    if (imagePath != null && imagePath.isNotEmpty) {
+      _userImageFile = File(imagePath);
+    }
   }
 
   Future<void> _updateLanguage(String language) async {
@@ -57,6 +97,11 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           title: const Text("Logout"),
           content: const Text("Are you sure you want to logout?"),
           actions: [
@@ -148,100 +193,186 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 20),
-            _buildActionRow(context),
-            _buildSectionTitle("Recently Viewed Stores"),
-            _buildRecentlyViewed(),
-            _buildSectionTitle("Account Settings"),
-            _buildSettingItem(
-              Icons.person_outline,
-              "Edit Profile",
-              Colors.red,
-              () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const EditprofileScreen(),
-                  ),
-                );
-                _loadUserData();
-              },
-            ),
-            _buildSettingItem(
-              Icons.location_on_outlined,
-              "Saved Addresses",
-              Colors.red,
-              () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SavedAddressesScreen(),
-                ),
-              ),
-            ),
-            _buildSettingItem(
-              Icons.translate,
-              "Language",
-              Colors.red,
-              () => _showLanguageDialog(context),
-              trailingText: _selectedLanguage,
-            ),
-            _buildSettingItem(
-              Icons.lock_outline,
-              "Privacy Center",
-              Colors.red,
-              () {},
-            ),
-            _buildSectionTitle("Feedback & information"),
-            _buildSettingItem(
-              Icons.headset_mic_outlined,
-              "Help Center",
-              Colors.red,
-              () {},
-            ),
-            _buildSettingItem(
-              Icons.description_outlined,
-              "Terms of Service",
-              Colors.red,
-              () {},
-            ),
-            _buildSettingItem(
-              Icons.help_outline,
-              "Browse FAQs",
-              Colors.red,
-              () {},
-            ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight:
+                MediaQuery.of(context).size.height * 0.25 > 180
+                    ? MediaQuery.of(context).size.height * 0.25
+                    : 180,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: const Color.fromARGB(255, 123, 87, 87),
+            flexibleSpace: FlexibleSpaceBar(
+              centerTitle: false,
+              titlePadding: const EdgeInsets.only(left: 56, bottom: 12),
+              title: LayoutBuilder(
+                builder: (context, constraints) {
+                  final bool isCollapsed =
+                      constraints.biggest.height <=
+                      kToolbarHeight + MediaQuery.of(context).padding.top + 10;
 
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: OutlinedButton(
-                onPressed: () => _showLogoutDialog(context),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                  side: const BorderSide(color: Colors.red),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                  return AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: isCollapsed ? 1.0 : 0.0,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundImage:
+                              _userImageFile != null
+                                  ? FileImage(_userImageFile!)
+                                  : null,
+                          child:
+                              _userImageFile == null
+                                  ? const Icon(
+                                    Icons.person,
+                                    size: 15,
+                                    color: Colors.white,
+                                  )
+                                  : null,
+                        ),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _userName,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                _userPhone,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              background: _buildHeader(),
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                _buildActionRow(context),
+                _buildSectionTitle("Recently Viewed Stores"),
+                _buildRecentlyViewed(),
+                _buildSectionTitle("Account Settings"),
+
+                _buildSettingItem(
+                  Icons.person_outline,
+                  "Edit Profile",
+                  Colors.red,
+                  () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditprofileScreen(),
+                      ),
+                    ).then((_) => _loadUserData());
+                  },
+                ),
+
+                _buildSettingItem(
+                  Icons.location_on_outlined,
+                  "Saved Addresses",
+                  Colors.red,
+                  () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SavedAddressesScreen(),
+                      ),
+                    );
+                    widget.onAddressChanged();
+                  },
+                ),
+
+                _buildSettingItem(
+                  Icons.translate,
+                  "Language",
+                  Colors.red,
+                  () => _showLanguageDialog(context),
+                  trailingText: _selectedLanguage,
+                ),
+
+                _buildSettingItem(
+                  Icons.lock_outline,
+                  "Privacy Center",
+                  Colors.red,
+                  () {},
+                ),
+
+                _buildSectionTitle("Feedback & information"),
+
+                _buildSettingItem(
+                  Icons.headset_mic_outlined,
+                  "Help Center",
+                  Colors.red,
+                  () {},
+                ),
+                _buildSettingItem(
+                  Icons.description_outlined,
+                  "Terms of Service",
+                  Colors.red,
+                  () {},
+                ),
+                _buildSettingItem(
+                  Icons.help_outline,
+                  "Browse FAQs",
+                  Colors.red,
+                  () {},
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: OutlinedButton(
+                    onPressed: () => _showLogoutDialog(context),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      side: const BorderSide(color: Colors.red),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                    ),
+                    child: const Text(
+                      "Logout",
+                      style: TextStyle(color: Colors.red, fontSize: 16),
+                    ),
                   ),
                 ),
-                child: const Text(
-                  "Logout",
-                  style: TextStyle(color: Colors.red, fontSize: 16),
-                ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildHeader() {
+    double topPadding = MediaQuery.of(context).padding.top + 20;
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 60, 16, 30),
+      padding: EdgeInsets.fromLTRB(16, topPadding, 16, 30),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -253,28 +384,53 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.white24,
-            child: Icon(Icons.person, size: 50, color: Colors.white),
+          GestureDetector(
+            onTap: () {
+              if (_userImageFile != null) {
+                _showFullScreenImage(context, _userImageFile!);
+              }
+            },
+            child: Hero(
+              tag: 'profile_pic',
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.white24,
+                backgroundImage:
+                    _userImageFile != null ? FileImage(_userImageFile!) : null,
+                child:
+                    _userImageFile == null
+                        ? const Icon(
+                          Icons.person,
+                          size: 50,
+                          color: Colors.white,
+                        )
+                        : null,
+              ),
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   _userName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 22,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
+                    height: 1.1,
                   ),
                 ),
+                const SizedBox(height: 4),
                 Text(
                   _userPhone,
-                  style: const TextStyle(color: Colors.white70, fontSize: 16),
+                  style: const TextStyle(color: Colors.white70, fontSize: 18),
                 ),
               ],
             ),

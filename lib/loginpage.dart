@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:caremall/homescreen.dart';
+import 'package:caremall/home/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -14,17 +14,14 @@ class Loginpage extends StatefulWidget {
 }
 
 class _LoginpageState extends State<Loginpage> {
-  // --- State Variables ---
   bool _isOtpSent = false;
   bool _isLoading = false;
   String _authMode = "login";
 
-  // --- Timer Variables ---
   Timer? _timer;
   int _timerValue = 60;
   bool _canResend = false;
 
-  // --- Controllers & Constants ---
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   final String _baseUrl = "https://api.caremall.in/api/v1/user/auth";
@@ -37,8 +34,6 @@ class _LoginpageState extends State<Loginpage> {
     _otpController.dispose();
     super.dispose();
   }
-
-  // --- Logic Methods ---
 
   void _startTimer() {
     setState(() {
@@ -84,7 +79,6 @@ class _LoginpageState extends State<Loginpage> {
           )
           .timeout(const Duration(seconds: 10));
 
-      // Handle Auto-Registration if not found
       if (response.statusCode != 200 && response.statusCode != 201) {
         final errorData = jsonDecode(response.body);
         String msg = errorData['message'].toString().toLowerCase();
@@ -171,8 +165,6 @@ class _LoginpageState extends State<Loginpage> {
       ),
     );
   }
-
-  // --- UI Components ---
 
   @override
   Widget build(BuildContext context) {

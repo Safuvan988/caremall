@@ -1,27 +1,28 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Address {
-  final String title;
-  final String fullAddress;
-  final String userInfo;
+  final String houseInfo;
+  final String cityState;
+  final String zipCode;
 
   Address({
-    required this.title,
-    required this.fullAddress,
-    required this.userInfo,
+    required this.houseInfo,
+    required this.cityState,
+    required this.zipCode,
   });
 
   Map<String, dynamic> toMap() {
-    return {'title': title, 'fullAddress': fullAddress, 'userInfo': userInfo};
+    return {'houseInfo': houseInfo, 'cityState': cityState, 'zipCode': zipCode};
   }
 
   factory Address.fromMap(Map<String, dynamic> map) {
     return Address(
-      title: map['title'],
-      fullAddress: map['fullAddress'],
-      userInfo: map['userInfo'],
+      houseInfo: map['houseInfo'] ?? '',
+      cityState: map['cityState'] ?? '',
+      zipCode: map['zipCode'] ?? '',
     );
   }
 }
@@ -69,43 +70,80 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
   void _openAddressDialog({Address? existingAddress, int? index}) {
     final bool isEditing = existingAddress != null;
 
-    final titleController = TextEditingController(
-      text: isEditing ? existingAddress.title : "",
+    final houseController = TextEditingController(
+      text: isEditing ? existingAddress.houseInfo : "",
     );
-    final userController = TextEditingController(
-      text: isEditing ? existingAddress.userInfo : "",
+    final cityStateController = TextEditingController(
+      text: isEditing ? existingAddress.cityState : "",
     );
-    final addressController = TextEditingController(
-      text: isEditing ? existingAddress.fullAddress : "",
+    final zipController = TextEditingController(
+      text: isEditing ? existingAddress.zipCode : "",
     );
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(isEditing ? "Edit Address" : "Add New Address"),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 24,
           ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(
-                    labelText: "Label (Home/Work)",
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: Text(isEditing ? "Edit Address" : "Add New Address"),
+
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Address Info",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
-                TextField(
-                  controller: userController,
-                  decoration: const InputDecoration(labelText: "Name & Phone"),
-                ),
-                TextField(
-                  controller: addressController,
-                  decoration: const InputDecoration(labelText: "Full Address"),
-                ),
-              ],
+                  const SizedBox(height: 12),
+                  _buildAddressField(
+                    controller: houseController,
+                    label: "House No, Building, Street",
+                    hint: "e.g. Apt 4B, Sunset Blvd",
+                  ),
+                  const SizedBox(height: 16),
+
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: _buildAddressField(
+                          controller: cityStateController,
+                          label: "City / State",
+                          hint: "e.g. New York, NY",
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 1,
+                        child: _buildAddressField(
+                          controller: zipController,
+                          label: "Zip Code",
+                          hint: "12345",
+                          keyboardType: TextInputType.number,
+                          maxLength: 6,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -114,26 +152,44 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
               child: const Text("Cancel"),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 228, 81, 71),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               onPressed: () {
-                if (titleController.text.isNotEmpty) {
-                  setState(() {
-                    final newAddress = Address(
-                      title: titleController.text,
-                      userInfo: userController.text,
-                      fullAddress: addressController.text,
-                    );
+                final house = houseController.text.trim();
+                final cityState = cityStateController.text.trim();
+                final zip = zipController.text.trim();
 
-                    if (isEditing) {
-                      addresses[index!] = newAddress;
-                    } else {
-                      addresses.add(newAddress);
-                    }
-                  });
-                  _saveToDisk();
-                  Navigator.pop(context);
+                if (house.isEmpty || cityState.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Please fill in the address details"),
+                    ),
+                  );
+                  return;
                 }
+
+                setState(() {
+                  final newAddress = Address(
+                    houseInfo: house,
+                    cityState: cityState,
+                    zipCode: zip,
+                  );
+
+                  if (isEditing) {
+                    addresses[index!] = newAddress;
+                  } else {
+                    addresses.add(newAddress);
+                  }
+                });
+
+                _saveToDisk();
+                Navigator.pop(context);
               },
-              child: const Text("Save"),
+              child: const Text("Save", style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -191,7 +247,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                     child:
                         addresses.isEmpty
                             ? const Center(
-                              child: Text("No addresses saved yet."),
+                              child: Text("No Addresses saved yet."),
                             )
                             : ListView.builder(
                               padding: const EdgeInsets.symmetric(
@@ -199,10 +255,72 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                               ),
                               itemCount: addresses.length,
                               itemBuilder: (context, index) {
-                                return _buildAddressItem(
-                                  context,
-                                  addresses[index],
-                                  index,
+                                final item = addresses[index];
+                                return Dismissible(
+                                  key: Key("${item.houseInfo}_$index"),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(right: 20),
+                                    color: Colors.red,
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  confirmDismiss: (direction) async {
+                                    return await showDialog(
+                                      context: context,
+                                      builder:
+                                          (context) => AlertDialog(
+                                            backgroundColor: Colors.white,
+                                            surfaceTintColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            title: const Text("Confirm"),
+                                            content: const Text(
+                                              "Are you sure you want to delete this address?",
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed:
+                                                    () => Navigator.pop(
+                                                      context,
+                                                      false,
+                                                    ),
+                                                child: const Text("No"),
+                                              ),
+                                              TextButton(
+                                                onPressed:
+                                                    () => Navigator.pop(
+                                                      context,
+                                                      true,
+                                                    ),
+                                                child: const Text("Yes"),
+                                              ),
+                                            ],
+                                          ),
+                                    );
+                                  },
+                                  onDismissed: (direction) {
+                                    setState(() {
+                                      addresses.removeAt(index);
+                                    });
+                                    _saveToDisk();
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("Address deleted"),
+                                      ),
+                                    );
+                                  },
+                                  child: _buildAddressItem(
+                                    context,
+                                    item,
+                                    index,
+                                  ),
                                 );
                               },
                             ),
@@ -220,10 +338,11 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              address.title,
+              address.houseInfo,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             PopupMenuButton<String>(
+              color: Colors.white,
               onSelected: (value) {
                 if (value == 'edit') {
                   _openAddressDialog(existingAddress: address, index: index);
@@ -246,17 +365,47 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
             ),
           ],
         ),
-        Text(
-          address.fullAddress,
-          style: TextStyle(fontSize: 14, color: Colors.grey[600], height: 1.4),
-        ),
         const SizedBox(height: 4),
         Text(
-          address.userInfo,
-          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+          "${address.cityState}${address.zipCode.isNotEmpty ? ', ${address.zipCode}' : ''}",
+          style: TextStyle(fontSize: 14, color: Colors.grey[600], height: 1.4),
         ),
         const Divider(height: 32, thickness: 1),
       ],
     );
   }
+}
+
+Widget _buildAddressField({
+  required TextEditingController controller,
+  required String label,
+  required String hint,
+  TextInputType keyboardType = TextInputType.text,
+  int? maxLength,
+}) {
+  return TextField(
+    controller: controller,
+    maxLength: maxLength,
+    keyboardType: keyboardType,
+    textCapitalization: TextCapitalization.words,
+    inputFormatters:
+        keyboardType == TextInputType.number
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : null,
+    style: const TextStyle(fontSize: 14),
+    decoration: InputDecoration(
+      labelText: label,
+      hintText: hint,
+      hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+      labelStyle: const TextStyle(fontSize: 13),
+      floatingLabelStyle: const TextStyle(color: Colors.red),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: Colors.red, width: 1.5),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      counterText: "",
+    ),
+  );
 }

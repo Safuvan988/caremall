@@ -1,5 +1,5 @@
 import 'package:caremall/cartprovider.dart';
-import 'package:caremall/homescreen.dart';
+import 'package:caremall/home/homescreen.dart';
 import 'package:caremall/onbordingscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +29,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       home: isLoggedIn ? const Homescreen() : const OnboardingScreen(),
+      routes: {
+        '/home': (context) => const Homescreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
+      },
     );
   }
 }

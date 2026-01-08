@@ -1,9 +1,32 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartProvider extends ChangeNotifier {
-  final List<Map<String, dynamic>> _items = [];
+  List<Map<String, dynamic>> _items = [];
 
   List<Map<String, dynamic>> get items => _items;
+
+  CartProvider() {
+    _loadCartFromStorage();
+  }
+
+  Future<void> _saveCartToStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    String encodedData = json.encode(_items);
+    await prefs.setString('user_cart_data', encodedData);
+  }
+
+  Future<void> _loadCartFromStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? savedCart = prefs.getString('user_cart_data');
+
+    if (savedCart != null) {
+      List<dynamic> decodedData = json.decode(savedCart);
+      _items = List<Map<String, dynamic>>.from(decodedData);
+      notifyListeners();
+    }
+  }
 
   void addToCart(Map<String, dynamic> product) {
     int index = _items.indexWhere(
@@ -18,11 +41,13 @@ class CartProvider extends ChangeNotifier {
       _items.add({...product, 'quantity': 1});
     }
 
+    _saveCartToStorage();
     notifyListeners();
   }
 
   void incrementQuantity(int index) {
     _items[index]['quantity']++;
+    _saveCartToStorage();
     notifyListeners();
   }
 
@@ -32,6 +57,7 @@ class CartProvider extends ChangeNotifier {
     } else {
       _items.removeAt(index);
     }
+    _saveCartToStorage();
     notifyListeners();
   }
 
@@ -52,6 +78,7 @@ class CartProvider extends ChangeNotifier {
 
   void clearCart() {
     _items.clear();
+    _saveCartToStorage();
     notifyListeners();
   }
 }

@@ -2,8 +2,8 @@ import 'package:caremall/cartprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ShoppingCartPage extends StatelessWidget {
-  const ShoppingCartPage({super.key});
+class CartPage extends StatelessWidget {
+  const CartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +128,11 @@ class ShoppingCartPage extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+                if (item.containsKey('selectedSize'))
+                  Text(
+                    "Size: ${item['selectedSize']}",
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 const SizedBox(height: 8),
                 Text(
                   'Rs.${item['price']}',

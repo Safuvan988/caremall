@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,10 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   String selectedSize = "M";
   late String mainImage;
+
+  bool get _needsSize =>
+      widget.productData['category'] != 'Watch' &&
+      widget.productData['category'] != 'Electronics';
 
   @override
   void initState() {
@@ -44,12 +50,9 @@ class _ProductScreenState extends State<ProductScreen> {
                 Positioned(
                   top: 40,
                   left: 16,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () => Navigator.pop(context),
-                    ),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () => Navigator.pop(context),
                   ),
                 ),
               ],
@@ -108,23 +111,24 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
 
                   const SizedBox(height: 20),
-                  const Text(
-                    "Size",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children:
-                        [
-                          "S",
-                          "M",
-                          "L",
-                          "XL",
-                          "XXL",
-                        ].map((size) => _buildSizeBox(size)).toList(),
-                  ),
-
-                  const Divider(height: 40),
+                  if (_needsSize) ...[
+                    const Text(
+                      "Size",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children:
+                          [
+                            "S",
+                            "M",
+                            "L",
+                            "XL",
+                            "XXL",
+                          ].map((size) => _buildSizeBox(size)).toList(),
+                    ),
+                    const Divider(height: 40),
+                  ],
 
                   ExpansionTile(
                     title: const Text(
@@ -335,22 +339,26 @@ class _ProductScreenState extends State<ProductScreen> {
           Expanded(
             child: OutlinedButton(
               onPressed: () {
-                final productToAddToCart = {
-                  ...widget.productData,
-                  "selectedSize": selectedSize,
-                };
+                final Map<String, dynamic> productToAddToCart = Map.from(
+                  widget.productData,
+                );
+
+                if (_needsSize && selectedSize.isNotEmpty) {
+                  productToAddToCart["selectedSize"] = selectedSize;
+                }
 
                 Provider.of<CartProvider>(
                   context,
                   listen: false,
                 ).addToCart(productToAddToCart);
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Added $selectedSize to cart!'),
-                    duration: const Duration(seconds: 1),
-                  ),
-                );
+                String message =
+                    _needsSize
+                        ? 'Added $selectedSize to cart!'
+                        : 'Added to cart!';
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(message)));
               },
               style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
               child: const Text("Add to Cart"),

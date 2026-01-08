@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 class EditprofileScreen extends StatefulWidget {
   const EditprofileScreen({super.key});
@@ -14,18 +18,71 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
   final TextEditingController _secondNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
   @override
   void initState() {
     super.initState();
     _loadCurrentData();
   }
 
+  void _showFullScreenImage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => Scaffold(
+              backgroundColor: Colors.black,
+              appBar: AppBar(
+                backgroundColor: Colors.black,
+                iconTheme: const IconThemeData(color: Colors.white),
+                title: const Text(
+                  "Profile Photo",
+                  style: TextStyle(color: Colors.white),
+                ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showImageSourceOptions();
+                    },
+                  ),
+                ],
+              ),
+              body: Center(
+                child: Hero(
+                  tag: 'profile_pic',
+                  child: InteractiveViewer(
+                    child: Image.file(
+                      _imageFile!,
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+      ),
+    );
+  }
+
   Future<void> _loadCurrentData() async {
     final prefs = await SharedPreferences.getInstance();
     String fullName = prefs.getString('userName') ?? "";
+    String? imagePath = prefs.getString('userImage');
 
-    List<String> parts = fullName.split(' ');
     setState(() {
+      if (imagePath != null && imagePath.isNotEmpty) {
+        File file = File(imagePath);
+        if (file.existsSync()) {
+          _imageFile = file;
+        }
+      }
+
+      List<String> parts = fullName.split(' ');
       _firstNameController.text = parts.isNotEmpty ? parts[0] : "";
       _secondNameController.text =
           parts.length > 1 ? parts.sublist(1).join(' ') : "";
@@ -33,6 +90,24 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
       _emailController.text =
           prefs.getString('userEmail') ?? "abc123@gmail.com";
     });
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      final directory = await getApplicationDocumentsDirectory();
+
+      final String fileName = p.basename(pickedFile.path);
+
+      final String savedPath = p.join(directory.path, fileName);
+
+      final File permanentFile = await File(pickedFile.path).copy(savedPath);
+
+      setState(() {
+        _imageFile = permanentFile;
+      });
+    }
   }
 
   String _capitalize(String value) {
@@ -51,7 +126,6 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
     String firstName = _capitalize(_firstNameController.text);
     String secondName = _capitalize(_secondNameController.text);
     String rawPhone = _phoneController.text.trim();
-
     String fullDisplayName =
         secondName.isEmpty ? firstName : "$firstName $secondName";
 
@@ -69,12 +143,48 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
     await prefs.setString('userName', fullDisplayName);
     await prefs.setString('userPhone', rawPhone);
     await prefs.setString('userEmail', _emailController.text.trim());
+
+    if (_imageFile != null) {
+      await prefs.setString('userImage', _imageFile!.path);
+    }
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Profile updated successfully!")),
       );
       Navigator.pop(context);
     }
+  }
+
+  void _showImageSourceOptions() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+      ),
+      builder:
+          (context) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text("Take a Photo"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text("Choose from Gallery"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+    );
   }
 
   @override
@@ -100,7 +210,6 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
           children: [
             _buildPhotoSection(),
             const SizedBox(height: 25),
-
             _buildEditField(
               label: "First Name",
               controller: _firstNameController,
@@ -127,9 +236,7 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
               hint: "Email Address",
               keyboardType: TextInputType.emailAddress,
             ),
-
             const SizedBox(height: 40),
-
             ElevatedButton(
               onPressed: _saveData,
               style: ElevatedButton.styleFrom(
@@ -151,25 +258,48 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
   }
 
   Widget _buildPhotoSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
+    return Center(
+      child: Stack(
         children: [
-          const CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.black12,
-            child: Icon(Icons.person, size: 50, color: Colors.black),
+          GestureDetector(
+            onTap: () {
+              if (_imageFile != null) {
+                _showFullScreenImage(context);
+              } else {
+                _showImageSourceOptions();
+              }
+            },
+            child: Hero(
+              tag: 'profile_pic',
+              child: CircleAvatar(
+                radius: 65,
+                backgroundColor: Colors.grey.shade200,
+                backgroundImage:
+                    _imageFile != null ? FileImage(_imageFile!) : null,
+                child:
+                    _imageFile == null
+                        ? const Icon(Icons.person, size: 70, color: Colors.grey)
+                        : null,
+              ),
+            ),
           ),
-          const Spacer(),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Edit Photo',
-              style: TextStyle(color: Colors.red, fontSize: 16),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: GestureDetector(
+              onTap: _showImageSourceOptions,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
             ),
           ),
         ],
@@ -185,7 +315,6 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
     int? maxLength,
   }) {
     bool isNameField = label.contains("Name");
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
