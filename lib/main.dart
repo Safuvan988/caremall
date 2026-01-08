@@ -1,6 +1,7 @@
 import 'package:caremall/cartprovider.dart';
 import 'package:caremall/home/homescreen.dart';
 import 'package:caremall/onbordingscreen.dart';
+import 'package:caremall/wishlist_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,8 +13,11 @@ void main() async {
   final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => CartProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => WishlistProvider()),
+      ],
       child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );

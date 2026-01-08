@@ -1,4 +1,6 @@
+import 'package:caremall/wishlist_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
   final String title;
@@ -14,10 +16,25 @@ class ProductCard extends StatelessWidget {
     required this.oldPrice,
     required this.imageUrl,
     required this.discount,
+    required Map<String, String> product,
   });
 
   @override
   Widget build(BuildContext context) {
+    // 1. Move provider access inside build
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+
+    // 2. Create the product map to be used by the provider
+    final product = {
+      "title": title,
+      "price": price,
+      "oldPrice": oldPrice,
+      "image": imageUrl,
+      "discount": discount,
+    };
+
+    final bool isFavorite = wishlistProvider.isExist(product);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -54,13 +71,16 @@ class ProductCard extends StatelessWidget {
                 top: 8,
                 right: 8,
                 child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.favorite_border),
-                  // color: Colors.white,
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(
-                      const Color.fromARGB(255, 255, 254, 254),
-                    ),
+                  onPressed: () {
+                    wishlistProvider.toggleWishlist(product);
+                  },
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite ? Colors.red : Colors.grey,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
                   ),
                 ),
               ),

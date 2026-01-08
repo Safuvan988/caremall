@@ -149,6 +149,7 @@ class HomeContent extends StatelessWidget {
                             oldPrice: product["oldPrice"]!,
                             imageUrl: product["image"]!,
                             discount: product["discount"]!,
+                            product: {},
                           ),
                         );
                       },
@@ -269,6 +270,7 @@ class HomeContent extends StatelessWidget {
                         oldPrice: product["oldPrice"]!,
                         imageUrl: product["image"]!,
                         discount: product["discount"]!,
+                        product: {},
                       ),
                     ),
                   );
@@ -331,6 +333,7 @@ class HomeContent extends StatelessWidget {
                         oldPrice: product["oldPrice"]!,
                         imageUrl: product["image"]!,
                         discount: product["discount"]!,
+                        product: {},
                       ),
                     ),
                   );
@@ -621,6 +624,7 @@ class HomeContent extends StatelessWidget {
                           oldPrice: product["oldPrice"]!,
                           imageUrl: product["image"]!,
                           discount: product["discount"]!,
+                          product: {},
                         ),
                       ),
                     );
@@ -685,6 +689,7 @@ class HomeContent extends StatelessWidget {
                           oldPrice: product["oldPrice"]!,
                           imageUrl: product["image"]!,
                           discount: product["discount"]!,
+                          product: {},
                         ),
                       ),
                     );
