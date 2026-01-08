@@ -58,7 +58,7 @@ class ProductCard extends StatelessWidget {
                   icon: Icon(Icons.favorite_border),
                   // color: Colors.white,
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
+                    backgroundColor: WidgetStateProperty.all(
                       const Color.fromARGB(255, 255, 254, 254),
                     ),
                   ),
