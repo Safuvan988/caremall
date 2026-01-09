@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:caremall/loginpage.dart';
 import 'package:caremall/savedaddressesscreen.dart';
+import 'package:caremall/wishlist.dart';
 import 'package:flutter/material.dart';
 import 'package:caremall/editprofile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -483,7 +484,14 @@ class _ProfilePageState extends State<ProfilePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _actionButton(Icons.shopping_bag_outlined, "My Orders", () {}),
-          _actionButton(Icons.favorite_border, "Wishlist", () {}),
+          _actionButton(Icons.favorite_border, "Wishlist", () {
+            {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WishlistScreen()),
+              );
+            }
+          }),
           _actionButton(Icons.confirmation_number_outlined, "Coupons", () {}),
         ],
       ),

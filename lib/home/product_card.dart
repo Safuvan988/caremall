@@ -8,6 +8,7 @@ class ProductCard extends StatelessWidget {
   final String oldPrice;
   final String imageUrl;
   final String discount;
+  final Map<String, dynamic> product;
 
   const ProductCard({
     super.key,
@@ -16,23 +17,12 @@ class ProductCard extends StatelessWidget {
     required this.oldPrice,
     required this.imageUrl,
     required this.discount,
-    required Map<String, String> product,
+    required this.product,
   });
 
   @override
   Widget build(BuildContext context) {
-    // 1. Move provider access inside build
     final wishlistProvider = Provider.of<WishlistProvider>(context);
-
-    // 2. Create the product map to be used by the provider
-    final product = {
-      "title": title,
-      "price": price,
-      "oldPrice": oldPrice,
-      "image": imageUrl,
-      "discount": discount,
-    };
-
     final bool isFavorite = wishlistProvider.isExist(product);
 
     return Column(
@@ -43,12 +33,25 @@ class ProductCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  imageUrl,
-                  fit: BoxFit.cover,
+                child: Container(
                   width: double.infinity,
+                  color: Colors.grey[200],
+                  child:
+                      imageUrl.isNotEmpty
+                          ? Image.asset(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) => const Center(
+                                  child: Icon(Icons.broken_image),
+                                ),
+                          )
+                          : const Center(
+                            child: Icon(Icons.image_not_supported),
+                          ),
                 ),
               ),
+              // Green Discount Badge (Top Left)
               Positioned(
                 top: 8,
                 left: 8,
@@ -58,7 +61,7 @@ class ProductCard extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.green[600],
+                    color: const Color(0xFF2E7D32), // Green
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -67,20 +70,53 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
               ),
+              // Wishlist Button (Top Right)
               Positioned(
                 top: 8,
                 right: 8,
-                child: IconButton(
-                  onPressed: () {
-                    wishlistProvider.toggleWishlist(product);
-                  },
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? Colors.red : Colors.grey,
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
                   ),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const CircleBorder(),
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => wishlistProvider.toggleWishlist(product),
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.grey,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ),
+              // Rating Badge (Bottom Right)
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.orange, size: 10),
+                      SizedBox(width: 2),
+                      Text(
+                        "4.5",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -88,13 +124,14 @@ class ProductCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
+        // 2. Product Title
         Text(
           title,
-          maxLines: 2,
+          maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 12),
+          style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
         ),
-        const SizedBox(height: 4),
+        // 3. Price Row
         Row(
           children: [
             Text(
@@ -105,16 +142,26 @@ class ProductCard extends StatelessWidget {
             Text(
               oldPrice,
               style: const TextStyle(
-                decoration: TextDecoration.lineThrough,
                 color: Colors.grey,
+                decoration: TextDecoration.lineThrough,
                 fontSize: 11,
               ),
             ),
+            const Spacer(),
+            const Icon(
+              Icons.keyboard_arrow_down,
+              size: 14,
+              color: Colors.green,
+            ),
+            const Text(
+              "15%",
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
-        ),
-        const Text(
-          "Free Delivery",
-          style: TextStyle(color: Colors.blue, fontSize: 10),
         ),
       ],
     );

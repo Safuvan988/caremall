@@ -54,13 +54,14 @@ class WishlistScreen extends StatelessWidget {
                               mainAxisSpacing: 10,
                             ),
                         itemBuilder: (context, index) {
+                          final item = wishlistItems[index];
                           return ProductCard(
-                            product: wishlistItems[index],
-                            title: '',
-                            price: '',
-                            oldPrice: '',
-                            discount: '',
-                            imageUrl: '',
+                            imageUrl: item['image'] ?? item['imageUrl'] ?? '',
+                            title: item['title'] ?? 'No Title',
+                            price: item['price'] ?? '0',
+                            oldPrice: item['oldPrice'] ?? '',
+                            discount: item['discount'] ?? '0%',
+                            product: item,
                           );
                         },
                       ),

@@ -3,7 +3,6 @@ import 'package:caremall/home/product_data.dart';
 import 'package:caremall/productscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'product_card.dart';
 
 class HomeContent extends StatelessWidget {
@@ -270,7 +269,7 @@ class HomeContent extends StatelessWidget {
                         oldPrice: product["oldPrice"]!,
                         imageUrl: product["image"]!,
                         discount: product["discount"]!,
-                        product: {},
+                        product: product,
                       ),
                     ),
                   );
