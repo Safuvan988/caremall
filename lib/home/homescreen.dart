@@ -20,7 +20,7 @@ class _HomescreenState extends State<Homescreen> {
   String _currentAddress = "Loading...";
 
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, String>> _searchResults = [];
+  List<Map<String, dynamic>> _searchResults = [];
   bool _isSearching = false;
 
   @override
@@ -84,7 +84,7 @@ class _HomescreenState extends State<Homescreen> {
         }).toList();
 
     // Remove duplicates based on title
-    final uniqueResults = <String, Map<String, String>>{};
+    final uniqueResults = <String, Map<String, dynamic>>{};
     for (var product in results) {
       uniqueResults[product["title"]!] = product;
     }

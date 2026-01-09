@@ -7,7 +7,7 @@ import 'package:caremall/allreveiwscreen.dart';
 import 'package:caremall/cartprovider.dart';
 
 class ProductScreen extends StatefulWidget {
-  final Map<String, String> productData;
+  final Map<String, dynamic> productData;
 
   const ProductScreen({super.key, required this.productData});
 
@@ -18,15 +18,27 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   String selectedSize = "M";
   late String mainImage;
+  late List<String> allImages;
+  int _currentIndex = 0;
+
+  final PageController _pageController = PageController();
 
   bool get _needsSize =>
       widget.productData['category'] != 'Watch' &&
       widget.productData['category'] != 'Electronics';
 
   @override
+  @override
   void initState() {
     super.initState();
     mainImage = widget.productData["image"]!;
+    allImages = (widget.productData["gallery"] as List<String>?) ?? [mainImage];
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -41,11 +53,22 @@ class _ProductScreenState extends State<ProductScreen> {
           children: [
             Stack(
               children: [
-                Image.asset(
-                  mainImage,
+                SizedBox(
                   height: 400,
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: allImages.length,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentIndex = index;
+                        mainImage = allImages[index];
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      return Image.asset(allImages[index], fit: BoxFit.cover);
+                    },
+                  ),
                 ),
                 Positioned(
                   top: 40,
@@ -53,6 +76,32 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.black),
                     onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 0,
+                  right: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:
+                        allImages.asMap().entries.map((entry) {
+                          return Container(
+                            width: 8.0,
+                            height: 8.0,
+                            margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:
+                                  _currentIndex == entry.key
+                                      ? Colors
+                                          .red // Active dot
+                                      : Colors.white.withOpacity(
+                                        0.5,
+                                      ), // Inactive dot
+                            ),
+                          );
+                        }).toList(),
                   ),
                 ),
               ],
@@ -63,15 +112,19 @@ class _ProductScreenState extends State<ProductScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      _buildThumbnail(product["image"]!),
-                      _buildThumbnail(product["image"]!),
-                      _buildThumbnail(product["image"]!),
-                    ],
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children:
+                          allImages.asMap().entries.map((entry) {
+                            int index = entry.key;
+                            String path = entry.value;
+                            return _buildThumbnail(path, index);
+                          }).toList(),
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  const SizedBox(height: 8),
+
                   Text(
                     product["title"]!,
                     style: const TextStyle(
@@ -206,7 +259,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     MaterialPageRoute(
                                       builder:
                                           (context) => AllReviewsScreen(
-                                            productData: product,
+                                            productData: {},
+                                            // productData: product,
                                           ),
                                     ),
                                   );
@@ -235,10 +289,17 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Widget _buildThumbnail(String imgPath) {
+  Widget _buildThumbnail(String imgPath, int index) {
     bool isSelected = mainImage == imgPath;
     return GestureDetector(
-      onTap: () => setState(() => mainImage = imgPath),
+      onTap: () {
+        setState(() => mainImage = imgPath);
+        _pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      },
       child: Container(
         margin: const EdgeInsets.only(right: 10),
         padding: const EdgeInsets.all(2),

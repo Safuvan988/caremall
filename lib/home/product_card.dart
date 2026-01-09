@@ -1,6 +1,4 @@
-import 'package:caremall/wishlist_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
   final String title;
@@ -22,8 +20,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final wishlistProvider = Provider.of<WishlistProvider>(context);
-    final bool isFavorite = wishlistProvider.isExist(product);
+    // final wishlistProvider = Provider.of<WishlistProvider>(context);
+    // final bool isFavorite = wishlistProvider.isExist(product);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +49,6 @@ class ProductCard extends StatelessWidget {
                           ),
                 ),
               ),
-              // Green Discount Badge (Top Left)
               Positioned(
                 top: 8,
                 left: 8,
@@ -61,7 +58,7 @@ class ProductCard extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2E7D32), // Green
+                    color: const Color(0xFF2E7D32),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -70,7 +67,6 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // Wishlist Button (Top Right)
               Positioned(
                 top: 8,
                 right: 8,
@@ -83,16 +79,17 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: IconButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () => wishlistProvider.toggleWishlist(product),
+                    onPressed: () {},
+                    //  wishlistProvider.toggleWishlist(product),
                     icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? Colors.red : Colors.grey,
-                      size: 16,
+                      Icons.favorite_border,
+                      // isFavorite ? Icons.favorite : Icons.favorite_border,
+                      // color: isFavorite ? Colors.red : Colors.grey,
+                      // size: 16,
                     ),
                   ),
                 ),
               ),
-              // Rating Badge (Bottom Right)
               Positioned(
                 bottom: 8,
                 right: 8,
@@ -124,14 +121,12 @@ class ProductCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        // 2. Product Title
         Text(
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
         ),
-        // 3. Price Row
         Row(
           children: [
             Text(

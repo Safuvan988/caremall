@@ -18,7 +18,7 @@ class HomeContent extends StatelessWidget {
 
   final String address;
   final TextEditingController searchController;
-  final List<Map<String, String>> searchResults;
+  final List<Map<String, dynamic>> searchResults;
   final bool isSearching;
   final Function(String) onSearchChanged;
   final VoidCallback onClearSearch;
@@ -240,40 +240,43 @@ class HomeContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            SizedBox(
-              height: 250,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: ProductData.newArrivals.length,
-                itemBuilder: (context, index) {
-                  final product = ProductData.newArrivals[index];
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 250,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: ProductData.newArrivals.length,
+                  itemBuilder: (context, index) {
+                    final product = ProductData.newArrivals[index];
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => ProductScreen(
-                                productData: ProductData.newArrivals[index],
-                              ),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => ProductScreen(
+                                  productData: ProductData.newArrivals[index],
+                                ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 160,
+                        margin: const EdgeInsets.only(right: 12),
+                        child: ProductCard(
+                          title: product["title"]!,
+                          price: product["price"]!,
+                          oldPrice: product["oldPrice"]!,
+                          imageUrl: product["image"]!,
+                          discount: product["discount"]!,
+                          product: product,
                         ),
-                      );
-                    },
-                    child: Container(
-                      width: 160,
-                      margin: const EdgeInsets.only(right: 12),
-                      child: ProductCard(
-                        title: product["title"]!,
-                        price: product["price"]!,
-                        oldPrice: product["oldPrice"]!,
-                        imageUrl: product["image"]!,
-                        discount: product["discount"]!,
-                        product: product,
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
 
@@ -303,40 +306,43 @@ class HomeContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            SizedBox(
-              height: 250,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: ProductData.mostWanted.length,
-                itemBuilder: (context, index) {
-                  final product = ProductData.mostWanted[index];
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 250,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: ProductData.mostWanted.length,
+                  itemBuilder: (context, index) {
+                    final product = ProductData.mostWanted[index];
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => ProductScreen(
-                                productData: ProductData.mostWanted[index],
-                              ),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => ProductScreen(
+                                  productData: ProductData.mostWanted[index],
+                                ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 160,
+                        margin: const EdgeInsets.only(right: 12),
+                        child: ProductCard(
+                          title: product["title"]!,
+                          price: product["price"]!,
+                          oldPrice: product["oldPrice"]!,
+                          imageUrl: product["image"]!,
+                          discount: product["discount"]!,
+                          product: {},
                         ),
-                      );
-                    },
-                    child: Container(
-                      width: 160,
-                      margin: const EdgeInsets.only(right: 12),
-                      child: ProductCard(
-                        title: product["title"]!,
-                        price: product["price"]!,
-                        oldPrice: product["oldPrice"]!,
-                        imageUrl: product["image"]!,
-                        discount: product["discount"]!,
-                        product: {},
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
 
