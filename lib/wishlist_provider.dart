@@ -1,30 +1,62 @@
-// import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// class WishlistProvider extends ChangeNotifier {
-//   final List<Map<String, dynamic>> _wishlistItems = [];
+class FavoriteProvider extends ChangeNotifier {
+  List<Map<String, dynamic>> _favorites = [];
+  List<Map<String, dynamic>> get favorites => _favorites;
 
-//   List<Map<String, dynamic>> get wishlist => _wishlistItems;
+  FavoriteProvider() {
+    _loadFavoritesFromStorage();
+  }
 
-//   get items => null;
+  Future<void> _saveFavoritesToStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    String encodedData = json.encode(_favorites);
+    await prefs.setString('user_favorites_data', encodedData);
+  }
 
-//   // Check if a specific product exists in the list
-//   // We usually check by a unique 'id'
-//   bool isExist(Map<String, dynamic> product) {
-//     return _wishlistItems.any((item) => item['id'] == product['id']);
-//   }
+  Future<void> _loadFavoritesFromStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? savedFavorites = prefs.getString('user_favorites_data');
 
-//   void toggleWishlist(Map<String, dynamic> product) {
-//     final isExist = _wishlistItems.any((item) => item['id'] == product['id']);
+    if (savedFavorites != null) {
+      List<dynamic> decodedData = json.decode(savedFavorites);
+      _favorites = List<Map<String, dynamic>>.from(decodedData);
+      notifyListeners();
+    }
+  }
 
-//     if (isExist) {
-//       // Remove only the item with the matching ID
-//       _wishlistItems.removeWhere((item) => item['id'] == product['id']);
-//     } else {
-//       // Add ONLY the single product passed from the ProductCard
-//       _wishlistItems.add(product);
-//     }
+  bool isFavorite(String productTitle) {
+    return _favorites.any((item) => item['title'] == productTitle);
+  }
 
-//     // This triggers the UI to rebuild
-//     notifyListeners();
-//   }
-// }
+  void toggleFavorite(Map<String, dynamic> product) {
+    int index = _favorites.indexWhere(
+      (item) => item['title'] == product['title'],
+    );
+
+    if (index >= 0) {
+      _favorites.removeAt(index);
+    } else {
+      _favorites.add(product);
+    }
+
+    _saveFavoritesToStorage();
+    notifyListeners();
+  }
+
+  void removeFavorite(int index) {
+    _favorites.removeAt(index);
+    _saveFavoritesToStorage();
+    notifyListeners();
+  }
+
+  void clearFavorites() {
+    _favorites.clear();
+    _saveFavoritesToStorage();
+    notifyListeners();
+  }
+
+  int get favoriteCount => _favorites.length;
+}

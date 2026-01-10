@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:caremall/loginpage.dart';
-import 'package:caremall/savedaddressesscreen.dart';
+import 'package:caremall/saved_addresses_screen.dart';
+import 'package:caremall/wishlist_page.dart';
 import 'package:flutter/material.dart';
-import 'package:caremall/editprofile.dart';
+import 'package:caremall/edit_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -268,7 +269,6 @@ class _ProfilePageState extends State<ProfilePage> {
               background: _buildHeader(),
             ),
           ),
-
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,7 +278,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildSectionTitle("Recently Viewed Stores"),
                 _buildRecentlyViewed(),
                 _buildSectionTitle("Account Settings"),
-
                 _buildSettingItem(
                   Icons.person_outline,
                   "Edit Profile",
@@ -292,7 +291,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ).then((_) => _loadUserData());
                   },
                 ),
-
                 _buildSettingItem(
                   Icons.location_on_outlined,
                   "Saved Addresses",
@@ -307,7 +305,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     widget.onAddressChanged();
                   },
                 ),
-
                 _buildSettingItem(
                   Icons.translate,
                   "Language",
@@ -315,16 +312,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   () => _showLanguageDialog(context),
                   trailingText: _selectedLanguage,
                 ),
-
                 _buildSettingItem(
                   Icons.lock_outline,
                   "Privacy Center",
                   Colors.red,
                   () {},
                 ),
-
                 _buildSectionTitle("Feedback & information"),
-
                 _buildSettingItem(
                   Icons.headset_mic_outlined,
                   "Help Center",
@@ -343,7 +337,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   Colors.red,
                   () {},
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: OutlinedButton(
@@ -484,12 +477,10 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           _actionButton(Icons.shopping_bag_outlined, "My Orders", () {}),
           _actionButton(Icons.favorite_border, "Wishlist", () {
-            {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const WishlistScreen()),
-              // );
-            }
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const WishlistScreen()),
+            );
           }),
           _actionButton(Icons.confirmation_number_outlined, "Coupons", () {}),
         ],

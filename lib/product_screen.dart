@@ -1,10 +1,8 @@
-// ignore_for_file: unnecessary_null_comparison
-
+import 'package:caremall/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:caremall/allreveiwscreen.dart';
-import 'package:caremall/cartprovider.dart';
+import 'package:caremall/all_reveiw_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   final Map<String, dynamic> productData;
@@ -16,7 +14,7 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  String selectedSize = "M";
+  String selectedSize = "";
   late String mainImage;
   late List<String> allImages;
   int _currentIndex = 0;
@@ -24,8 +22,8 @@ class _ProductScreenState extends State<ProductScreen> {
   final PageController _pageController = PageController();
 
   bool get _needsSize =>
-      widget.productData['category'] != 'Watch' &&
-      widget.productData['category'] != 'Electronics';
+      widget.productData.containsKey('sizes') &&
+      (widget.productData['sizes'] as List).isNotEmpty;
 
   @override
   @override
@@ -33,6 +31,9 @@ class _ProductScreenState extends State<ProductScreen> {
     super.initState();
     mainImage = widget.productData["image"]!;
     allImages = (widget.productData["gallery"] as List<String>?) ?? [mainImage];
+    if (_needsSize) {
+      selectedSize = widget.productData['sizes'][0];
+    }
   }
 
   @override
@@ -94,11 +95,8 @@ class _ProductScreenState extends State<ProductScreen> {
                               shape: BoxShape.circle,
                               color:
                                   _currentIndex == entry.key
-                                      ? Colors
-                                          .red // Active dot
-                                      : Colors.white.withOpacity(
-                                        0.5,
-                                      ), // Inactive dot
+                                      ? Colors.red
+                                      : Colors.white.withValues(alpha: 0.5),
                             ),
                           );
                         }).toList(),
@@ -166,19 +164,18 @@ class _ProductScreenState extends State<ProductScreen> {
                   const SizedBox(height: 20),
                   if (_needsSize) ...[
                     const Text(
-                      "Size",
+                      "Select Size",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children:
-                          [
-                            "S",
-                            "M",
-                            "L",
-                            "XL",
-                            "XXL",
-                          ].map((size) => _buildSizeBox(size)).toList(),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children:
+                            (widget.productData['sizes'] as List)
+                                .map((size) => _buildSizeBox(size.toString()))
+                                .toList(),
+                      ),
                     ),
                     const Divider(height: 40),
                   ],
@@ -326,7 +323,7 @@ class _ProductScreenState extends State<ProductScreen> {
         margin: const EdgeInsets.only(right: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.red.withOpacity(0.1) : Colors.white,
+          color: isSelected ? Colors.red.withValues(alpha: 0.1) : Colors.white,
           border: Border.all(
             color: isSelected ? Colors.red : Colors.grey.shade300,
           ),

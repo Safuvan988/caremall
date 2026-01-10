@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:caremall/home/home_content.dart';
 import 'package:caremall/home/product_data.dart';
-import 'package:caremall/profilepage.dart';
+import 'package:caremall/profile_page.dart';
 import 'package:caremall/cart.dart';
 import 'package:caremall/categories.dart';
-import 'package:caremall/savedaddressesscreen.dart';
+import 'package:caremall/saved_addresses_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

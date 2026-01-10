@@ -1,4 +1,4 @@
-import 'package:caremall/productlisting.dart';
+import 'package:caremall/product_listing.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -184,7 +184,7 @@ class _CategoriesState extends State<Categories> {
                 isSelected
                     ? [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),

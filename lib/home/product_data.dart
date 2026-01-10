@@ -1,9 +1,9 @@
 class ProductData {
-  static const List<Map<String, String>> categories = [
+  static const List<Map<String, dynamic>> categories = [
     {"name": "Hoodies", "image": "assets/images/hoodie.png"},
     {"name": "Shorts", "image": "assets/images/shorts.webp"},
     {"name": "Shoes", "image": "assets/images/Nike Air Force 1 2.png"},
-    {"name": "Bag", "image": "assets/images/Premium Leather Handbag.jpeg"},
+    {"name": "Bag", "image": "assets/images/Premium Leather Handbag.png"},
     {"name": "Accessories", "image": "assets/images/smartwatch (2).jpg"},
     {"name": "T-Shirts", "image": "assets/images/hoodie1.webp"},
   ];
@@ -11,6 +11,8 @@ class ProductData {
   static const List<Map<String, dynamic>> newArrivals = [
     {
       "title": "Adidas Originals Samba",
+      "category": "Shoes",
+      "sizes": ["6", "7", "8", "9", "10", "11"],
       "price": "10,999",
       "oldPrice": "15,999",
       "image": "assets/images/adidas_samba2.png",
@@ -25,6 +27,8 @@ class ProductData {
     {
       "title":
           "Women Black Pure Cotton Solid Mid Length Regular Fit Formal Shirt Dress",
+      "category": "Women's Clothing",
+      "sizes": ["S", "M", "L", "XL", "XXL"],
       "price": "3,999",
       "oldPrice": "5,999",
       "image":
@@ -39,6 +43,7 @@ class ProductData {
 
     {
       "title": "The Pixel 9 with Gemini and AI",
+      "category": "Mobiles",
       "price": "55,999",
       "oldPrice": "60,999",
       "image": "assets/images/The Pixel 9 with Gemini and AI.png",
@@ -52,6 +57,8 @@ class ProductData {
 
     {
       "title": "Nike Air Force 1 Low",
+      "category": "Shoes",
+      "sizes": ["6", "7", "8", "9", "10", "11"],
       "price": "2,000",
       "oldPrice": "2,500",
       "image": "assets/images/Nike Air Force 1 2.png",
@@ -67,6 +74,8 @@ class ProductData {
   static const List<Map<String, dynamic>> mostWanted = [
     {
       "title": "Classic White Sneakers",
+      "category": "Shoes",
+      "sizes": ["6", "7", "8", "9", "10", "11"],
       "price": "2,000",
       "oldPrice": "2,500",
       "image": "assets/images/Classic White Sneakers.webp",
@@ -80,6 +89,8 @@ class ProductData {
 
     {
       "title": "Explore Wilderness Hoodie Cream colour",
+      "category": "Hoodies",
+      "sizes": ["S", "M", "L", "XL", "XXL"],
       "price": "500",
       "oldPrice": "799",
       "image": "assets/images/hoodie.png",
@@ -93,27 +104,29 @@ class ProductData {
 
     {
       "title": "Smart Watch with Health Tracking",
+      "category": "Accessories",
       "price": "1,899",
       "oldPrice": "2,499",
       "image": "assets/images/smartwatch (2).jpg",
       "discount": "20% Off",
       "gallery": [
-        "assets/images/smartwatch (2).jpg", //change this
-        "assets/images/smartwatch (2).jpg", //change this
-        "assets/images/smartwatch (2).jpg", //change this
+        "assets/images/smartwatch (2).jpg",
+        "assets/images/smartwatch (3).png",
+        "assets/images/smartwatch (4).png",
       ],
     },
 
     {
       "title": "Premium Leather Handbag",
+      "category": "Bags",
       "price": "3,700",
       "oldPrice": "4,000",
-      "image": "assets/images/Premium Leather Handbag.jpeg",
+      "image": "assets/images/Premium Leather Handbag.png",
       "discount": "15% Off",
       "gallery": [
-        "assets/images/Premium Leather Handbag.jpeg", //change this
-        "assets/images/Premium Leather Handbag.jpeg", //change this
-        "assets/images/Premium Leather Handbag.jpeg", //change this
+        "assets/images/Premium Leather Handbag.png",
+        "assets/images/Premium Leather Handbag1.png",
+        "assets/images/Premium Leather Handbag2.png",
       ],
     },
   ];
@@ -121,67 +134,71 @@ class ProductData {
   static const List<Map<String, dynamic>> beautyAndHealth = [
     {
       "title": "Ahmed Al Maghribi Marj EDP Unisex 100ml",
+      "category": "Perfumes",
       "price": "3999",
       "oldPrice": "",
-      "image": "assets/images/Ahmed Al Maghribi Marj EDP Unisex.webp",
+      "image": "assets/images/Ahmed Al Maghribi Marj EDP Unisex.png",
       "discount": "Premium",
-      "gallery": [
-        "assets/images/Ahmed Al Maghribi Marj EDP Unisex.webp", //change this
-        "assets/images/Ahmed Al Maghribi Marj EDP Unisex.webp", //change this
-        "assets/images/Ahmed Al Maghribi Marj EDP Unisex.webp", //change this
-      ],
+      "gallery": ["assets/images/Ahmed Al Maghribi Marj EDP Unisex.png"],
     },
 
     {
       "title": "Mamaearth Ubtan Face Wash",
+      "category": "Skin Care",
       "price": "249",
       "oldPrice": "275",
-      "image": "assets/images/Mamaearth Ubtan FaceWash.jpg",
+      "image": "assets/images/Mamaearth Ubtan FaceWash.png",
       "discount": "15% Off",
       "gallery": [
-        "assets/images/Mamaearth Ubtan FaceWash.jpg", //change this
-        "assets/images/Mamaearth Ubtan FaceWash.jpg", //change this
-        "assets/images/Mamaearth Ubtan FaceWash.jpg", //change this
+        "assets/images/Mamaearth Ubtan FaceWash.png",
+        "assets/images/Mamaearth Ubtan FaceWash1.png",
+        "assets/images/Mamaearth Ubtan FaceWash2.png",
+        "assets/images/Mamaearth Ubtan FaceWash3.png",
       ],
     },
 
     {
       "title": "Beardo Beard & Hair Growth Oil 100ml",
+      "category": "Hair Care",
       "price": "399",
       "oldPrice": "499",
-      "image": "assets/images/Beardo Beard & Hair Growth oil.jpg",
+      "image": "assets/images/Beardo Beard & Hair Growth oil.png",
       "discount": "15% Off",
       "gallery": [
-        "assets/images/Beardo Beard & Hair Growth oil.jpg", //change this
-        "assets/images/Beardo Beard & Hair Growth oil.jpg", //change this
-        "assets/images/Beardo Beard & Hair Growth oil.jpg", //change this
+        "assets/images/Beardo Beard & Hair Growth oil.png",
+        "assets/images/Beardo Beard & Hair Growth oil1.png",
+        "assets/images/Beardo Beard & Hair Growth oil2.png",
+        "assets/images/Beardo Beard & Hair Growth oil3.png",
       ],
     },
 
     {
       "title": "kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm",
+      "category": "Nutrition",
       "price": "267",
       "oldPrice": "376",
       "image":
-          "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm.jpg",
+          "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm.png",
       "discount": "15% Off",
       "gallery": [
-        "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm.jpg", //change this
-        "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm.jpg", //change this
-        "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm.jpg", //change this
+        "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm.png",
+        "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm1.png",
+        "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm2.png",
+        "assets/images/Kellogg's chocolate muesli multigrain fruit nut & seeds 450 gm3.png",
       ],
     },
 
     {
       "title": "Moringa Powder Organic India \n100gm",
+      "category": "Nutrition",
       "price": "210",
       "oldPrice": "300",
-      "image": "assets/images/Moringa Powder Organic India.webp",
+      "image": "assets/images/Moringa Powder Organic India.png",
       "discount": "10% Off",
       "gallery": [
-        "assets/images/Moringa Powder Organic India.webp", //change this
-        "assets/images/Moringa Powder Organic India.webp", //change this
-        "assets/images/Moringa Powder Organic India.webp", //change this
+        "assets/images/Moringa Powder Organic India.png",
+        "assets/images/Moringa Powder Organic India1.png",
+        "assets/images/Moringa Powder Organic India2.png",
       ],
     },
   ];
@@ -189,55 +206,58 @@ class ProductData {
   static const List<Map<String, dynamic>> topDealsInElectronics = [
     {
       "title": "Sony PlayStation5 Gaming Console (Slim)",
+      "category": "Electronics",
       "price": "54,990",
       "oldPrice": "60,000",
-      "image": "assets/images/Sony PlayStation5 Gaming Console (Slim).jpg",
+      "image": "assets/images/Sony PlayStation5 Gaming Console (Slim).png",
       "discount": "15% Off",
       "gallery": [
-        "assets/images/Sony PlayStation5 Gaming Console (Slim).jpg", //change this
-        "assets/images/Sony PlayStation5 Gaming Console (Slim).jpg", //change this
-        "assets/images/Sony PlayStation5 Gaming Console (Slim).jpg", //change this
+        "assets/images/Sony PlayStation5 Gaming Console (Slim).png",
+        "assets/images/Sony PlayStation5 Gaming Console (Slim)1.png",
+        "assets/images/Sony PlayStation5 Gaming Console (Slim)2.png",
+        "assets/images/Sony PlayStation5 Gaming Console (Slim)3.png",
       ],
     },
 
     {
       "title":
           "Hair Trimmer,Electric Shaving Machine,Adjustable Blade Clipper,trimmer for men,Body Trimmer,Electric Shaver",
+      "category": "Electronics",
       "price": "699",
       "oldPrice": "799",
       "image":
-          "assets/images/Hair Trimmer,Electric Shaving Machine,Adjustable Blade Clipper,trimmer for men,Body Trimmer.jpg",
+          "assets/images/Hair Trimmer,Electric Shaving Machine,Adjustable Blade Clipper,trimmer for men,Body Trimmer.png",
       "discount": "15% Off",
       "gallery": [
-        "assets/images/Hair Trimmer,Electric Shaving Machine,Adjustable Blade Clipper,trimmer for men,Body Trimmer.jpg", //change this
-        "assets/images/Hair Trimmer,Electric Shaving Machine,Adjustable Blade Clipper,trimmer for men,Body Trimmer.jpg", //change this
-        "assets/images/Hair Trimmer,Electric Shaving Machine,Adjustable Blade Clipper,trimmer for men,Body Trimmer.jpg", //change this
+        "assets/images/Hair Trimmer,Electric Shaving Machine,Adjustable Blade Clipper,trimmer for men,Body Trimmer.png",
+        "assets/images/Hair Trimmer,Electric Shaving Machine,Adjustable Blade Clipper,trimmer for men,Body Trimmer1.png",
       ],
     },
 
     {
       "title": "TP-Link TL-WA850RE Range Extender",
+      "category": "Electronics",
       "price": "1500",
       "oldPrice": "1800",
-      "image": "assets/images/TP-Link TL-WA850RE Range Extender.webp",
+      "image": "assets/images/TP-Link TL-WA850RE Range Extender.png",
       "discount": "15% Off",
       "gallery": [
-        "assets/images/TP-Link TL-WA850RE Range Extender.webp", //change this
-        "assets/images/TP-Link TL-WA850RE Range Extender.webp", //change this
-        "assets/images/TP-Link TL-WA850RE Range Extender.webp", //change this
+        "assets/images/TP-Link TL-WA850RE Range Extender.png",
+        "assets/images/TP-Link TL-WA850RE Range Extender1.png",
       ],
     },
 
     {
       "title": "Boat Rockerz 650 Pro Wireless Boom Headset",
+      "category": "Electronics",
       "price": "2999",
       "oldPrice": "3999",
-      "image": "assets/images/Boat Rockerz 650 Pro Wireless Boom Headset.webp",
+      "image": "assets/images/Boat Rockerz 650 Pro Wireless Boom Headset.png",
       "discount": "10% Off",
       "gallery": [
-        "assets/images/Boat Rockerz 650 Pro Wireless Boom Headset.webp", //change this
-        "assets/images/Boat Rockerz 650 Pro Wireless Boom Headset.webp", //change this
-        "assets/images/Boat Rockerz 650 Pro Wireless Boom Headset.webp", //change this
+        "assets/images/Boat Rockerz 650 Pro Wireless Boom Headset.png",
+        "assets/images/Boat Rockerz 650 Pro Wireless Boom Headset1.png",
+        "assets/images/Boat Rockerz 650 Pro Wireless Boom Headset2.png",
       ],
     },
   ];

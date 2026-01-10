@@ -1,6 +1,6 @@
 import 'package:caremall/home/deal_card.dart';
 import 'package:caremall/home/product_data.dart';
-import 'package:caremall/productscreen.dart';
+import 'package:caremall/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'product_card.dart';
@@ -398,10 +398,10 @@ class HomeContent extends StatelessWidget {
                         height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.red.withOpacity(0.3),
+                          color: Colors.red.withValues(alpha: 0.3),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.red.withOpacity(0.5),
+                              color: Colors.red.withValues(alpha: 0.5),
                               blurRadius: 50,
                               spreadRadius: 20,
                             ),
