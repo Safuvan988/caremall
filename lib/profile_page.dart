@@ -16,8 +16,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String _selectedLanguage = "English";
-  String _userName = "Full Name";
-  String _userPhone = "Number";
+  String _userName = "";
+  String _userPhone = "";
   File? _userImageFile;
 
   void _showFullScreenImage(BuildContext context, File image) {

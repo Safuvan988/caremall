@@ -22,11 +22,6 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final productId =
-    //     product['id']?.toString() ??
-    //     product['productId']?.toString() ??
-    //     title.hashCode.toString();
-
     return Consumer<FavoriteProvider>(
       builder: (context, favoriteProvider, child) {
         final isFav = favoriteProvider.isFavorite(title);
@@ -106,13 +101,24 @@ class ProductCard extends StatelessWidget {
                           size: 20,
                         ),
                         onPressed: () {
+                          final Map<String, dynamic> productToToggle =
+                              Map<String, dynamic>.from(product);
+                          productToToggle['title'] = title;
+
                           Provider.of<FavoriteProvider>(
                             context,
                             listen: false,
-                          ).toggleFavorite(product);
-
+                          ).toggleFavorite(productToToggle);
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.grey,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                              ),
                               content: Text(
                                 isFav
                                     ? "Removed from Wishlist"

@@ -159,8 +159,12 @@ class _LoginpageState extends State<Loginpage> {
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
         behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.grey,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        content: Text(message),
         duration: const Duration(seconds: 2),
       ),
     );

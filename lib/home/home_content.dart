@@ -137,8 +137,10 @@ class HomeContent extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder:
-                                    (context) =>
-                                        ProductScreen(productData: product),
+                                    (context) => ProductScreen(
+                                      productData: product,
+                                      title: '',
+                                    ),
                               ),
                             );
                           },
@@ -258,6 +260,7 @@ class HomeContent extends StatelessWidget {
                             builder:
                                 (context) => ProductScreen(
                                   productData: ProductData.newArrivals[index],
+                                  title: '',
                                 ),
                           ),
                         );
@@ -324,6 +327,7 @@ class HomeContent extends StatelessWidget {
                             builder:
                                 (context) => ProductScreen(
                                   productData: ProductData.mostWanted[index],
+                                  title: '',
                                 ),
                           ),
                         );
@@ -616,6 +620,7 @@ class HomeContent extends StatelessWidget {
                                 (context) => ProductScreen(
                                   productData:
                                       ProductData.beautyAndHealth[index],
+                                  title: '',
                                 ),
                           ),
                         );
@@ -681,6 +686,7 @@ class HomeContent extends StatelessWidget {
                                 (context) => ProductScreen(
                                   productData:
                                       ProductData.topDealsInElectronics[index],
+                                  title: '',
                                 ),
                           ),
                         );

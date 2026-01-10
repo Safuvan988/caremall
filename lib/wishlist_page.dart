@@ -189,6 +189,11 @@ class WishlistScreen extends StatelessWidget {
         favoriteProvider.removeFavorite(index);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.grey,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
             content: Text("$title removed from wishlist"),
             duration: const Duration(seconds: 2),
           ),
@@ -295,6 +300,13 @@ class WishlistScreen extends StatelessWidget {
                             ).addToCart(item);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.grey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12),
+                                  ),
+                                ),
                                 content: Text("Added to cart!"),
                                 duration: Duration(seconds: 1),
                               ),
@@ -323,6 +335,13 @@ class WishlistScreen extends StatelessWidget {
                           favoriteProvider.removeFavorite(index);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.grey,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
+                              ),
                               content: Text("$title removed from wishlist"),
                               duration: const Duration(seconds: 2),
                             ),
@@ -368,6 +387,11 @@ class WishlistScreen extends StatelessWidget {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
                       content: Text("Wishlist cleared"),
                       duration: Duration(seconds: 2),
                     ),

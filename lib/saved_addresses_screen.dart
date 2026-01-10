@@ -166,6 +166,11 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                 if (house.isEmpty || cityState.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
                       content: Text("Please fill in the address details"),
                     ),
                   );
@@ -312,6 +317,13 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.grey,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12),
+                                          ),
+                                        ),
                                         content: Text("Address deleted"),
                                       ),
                                     );

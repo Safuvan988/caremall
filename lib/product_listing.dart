@@ -1,3 +1,4 @@
+import 'package:caremall/home/product_data.dart';
 import 'package:flutter/material.dart';
 
 class Product {
@@ -22,84 +23,25 @@ class ProductListingPage extends StatelessWidget {
   const ProductListingPage({super.key, required this.categoryName});
 
   List<Product> getProducts() {
-    final Map<String, List<Product>> allData = {
-      'Mobiles': [
-        Product(
-          title: "Pixel 9",
-          price: "60,000",
-          oldPrice: "70,000",
-          image: "assets/images/The Pixel 9 with Gemini and AI.jpg",
-          discount: "8% Off",
-        ),
-        Product(
-          title: "Samsung S23 Ultra",
-          price: "95,000",
-          oldPrice: "1,10,000",
-          image: "assets/images/samsung s23 ultra.jpg",
-          discount: "15% Off",
-        ),
-        Product(
-          title: "IPhone 17 Pro Max",
-          price: "1,30,000",
-          oldPrice: "1,50,000",
-          image: "assets/images/17 pro max.jpg",
-          discount: "15% Off",
-        ),
-      ],
-      'Electronics': [
-        Product(
-          title: "Sony WH-1000XM5",
-          price: "24,999",
-          oldPrice: "29,999",
-          image: "assets/images/Sony WH-1000XM5.jpg",
-          discount: "16% Off",
-        ),
-        Product(
-          title: "Dell XPS 13",
-          price: "90,000",
-          oldPrice: "1,00,000",
-          image: "assets/images/Dell XPS 13.jpg",
-          discount: "10% Off",
-        ),
-      ],
-      'Fashion': [
-        Product(
-          title: "Classic White Sneakers",
-          price: "2,500",
-          oldPrice: "4,000",
-          image: "assets/images/Classic White Sneakers.webp",
-          discount: "40% Off",
-        ),
+    final List<Map<String, dynamic>> allItems = [
+      ...ProductData.newArrivals,
+      ...ProductData.mostWanted,
+      ...ProductData.beautyAndHealth,
+      ...ProductData.topDealsInElectronics,
+    ];
 
-        Product(
-          title: "Nike Air Force 1",
-          price: "2,500",
-          oldPrice: "4,000",
-          image: "assets/images/Nike Air Force 1.jpg",
-          discount: "40% Off",
-        ),
-
-        Product(
-          title: "Adidas Samba.jpg",
-          price: "2,500",
-          oldPrice: "4,000",
-          image: "assets/images/adidassamba.jpg",
-          discount: "40% Off",
-        ),
-      ],
-
-      'Beauty & Skincare': [
-        Product(
-          title: "Mamaearth Ubtan FaceWash",
-          price: "249",
-          oldPrice: "499",
-          image: "assets/images/Mamaearth Ubtan FaceWash.jpg",
-          discount: "40% Off",
-        ),
-      ],
-    };
-
-    return allData[categoryName] ?? [];
+    return allItems
+        .where((item) => item['category'] == categoryName)
+        .map(
+          (item) => Product(
+            title: item['title'] ?? '',
+            price: item['price'] ?? '',
+            oldPrice: item['oldPrice'] ?? '',
+            image: item['image'] ?? '',
+            discount: item['discount'] ?? '',
+          ),
+        )
+        .toList();
   }
 
   @override
@@ -199,7 +141,6 @@ class ProductCard extends StatelessWidget {
       height: 160,
       child: Row(
         children: [
-          // Image Section
           Stack(
             children: [
               ClipRRect(

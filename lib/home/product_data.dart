@@ -11,7 +11,7 @@ class ProductData {
   static const List<Map<String, dynamic>> newArrivals = [
     {
       "title": "Adidas Originals Samba",
-      "category": "Shoes",
+      "category": "Fashion",
       "sizes": ["6", "7", "8", "9", "10", "11"],
       "price": "10,999",
       "oldPrice": "15,999",
@@ -27,7 +27,7 @@ class ProductData {
     {
       "title":
           "Women Black Pure Cotton Solid Mid Length Regular Fit Formal Shirt Dress",
-      "category": "Women's Clothing",
+      "category": "Fashion",
       "sizes": ["S", "M", "L", "XL", "XXL"],
       "price": "3,999",
       "oldPrice": "5,999",
@@ -57,7 +57,7 @@ class ProductData {
 
     {
       "title": "Nike Air Force 1 Low",
-      "category": "Shoes",
+      "category": "Fashion",
       "sizes": ["6", "7", "8", "9", "10", "11"],
       "price": "2,000",
       "oldPrice": "2,500",
@@ -69,12 +69,42 @@ class ProductData {
         "assets/images/Nike Air Force 1 3.png",
       ],
     },
+    {
+      "title": "Samsung S23 Ultra",
+      "category": "Mobiles",
+      // "sizes": [],
+      "price": "95,000",
+      "oldPrice": "1,10,000",
+      "image": "assets/images/samsung s23 ultra.jpg",
+      "discount": "15% Off",
+      "gallery": ["assets/images/samsung s23 ultra.jpg"],
+    },
+    {
+      "title": "IPhone 17 Pro Max",
+      "category": "Mobiles",
+      // "sizes": [],
+      "price": " 1,30,000",
+      "oldPrice": "1,50,000",
+      "image": "assets/images/17 pro max.jpg",
+      "discount": "15% Off",
+      "gallery": ["assets/images/17 pro max.jpg"],
+    },
+    // {
+    //   "title": "",
+    //   "category": "",
+    //   "sizes": [],
+    //   "price": "",
+    //   "oldPrice": "",
+    //   "image": "",
+    //   "discount": "",
+    //   "gallery": [],
+    // },
   ];
 
   static const List<Map<String, dynamic>> mostWanted = [
     {
       "title": "Classic White Sneakers",
-      "category": "Shoes",
+      "category": "Fashion",
       "sizes": ["6", "7", "8", "9", "10", "11"],
       "price": "2,000",
       "oldPrice": "2,500",
@@ -104,7 +134,7 @@ class ProductData {
 
     {
       "title": "Smart Watch with Health Tracking",
-      "category": "Accessories",
+      "category": "Electronics",
       "price": "1,899",
       "oldPrice": "2,499",
       "image": "assets/images/smartwatch (2).jpg",
@@ -118,7 +148,7 @@ class ProductData {
 
     {
       "title": "Premium Leather Handbag",
-      "category": "Bags",
+      "category": "Fashion",
       "price": "3,700",
       "oldPrice": "4,000",
       "image": "assets/images/Premium Leather Handbag.png",
@@ -144,7 +174,7 @@ class ProductData {
 
     {
       "title": "Mamaearth Ubtan Face Wash",
-      "category": "Skin Care",
+      "category": "Beauty & Skincare",
       "price": "249",
       "oldPrice": "275",
       "image": "assets/images/Mamaearth Ubtan FaceWash.png",
@@ -158,8 +188,8 @@ class ProductData {
     },
 
     {
-      "title": "Beardo Beard & Hair Growth Oil 100ml",
-      "category": "Hair Care",
+      "title": "Beardo Beard & Hair Growth Oil 30ml",
+      "category": "Beauty & Skincare",
       "price": "399",
       "oldPrice": "499",
       "image": "assets/images/Beardo Beard & Hair Growth oil.png",

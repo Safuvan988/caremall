@@ -28,18 +28,28 @@ class FavoriteProvider extends ChangeNotifier {
   }
 
   bool isFavorite(String productTitle) {
-    return _favorites.any((item) => item['title'] == productTitle);
+    return _favorites.any(
+      (item) =>
+          item['title']?.toString().trim().toLowerCase() ==
+          productTitle.trim().toLowerCase(),
+    );
   }
 
   void toggleFavorite(Map<String, dynamic> product) {
+    final String? productTitle = product['title']?.toString();
+
+    if (productTitle == null) return;
+
     int index = _favorites.indexWhere(
-      (item) => item['title'] == product['title'],
+      (item) =>
+          item['title']?.toString().trim().toLowerCase() ==
+          productTitle.trim().toLowerCase(),
     );
 
     if (index >= 0) {
       _favorites.removeAt(index);
     } else {
-      _favorites.add(product);
+      _favorites.add(Map<String, dynamic>.from(product));
     }
 
     _saveFavoritesToStorage();

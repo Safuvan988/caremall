@@ -132,8 +132,12 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
     if (rawPhone.length != 10 || int.tryParse(rawPhone) == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
           content: Text("Please enter a valid 10-digit mobile number"),
-          backgroundColor: Colors.orange,
         ),
       );
       return;
@@ -150,7 +154,14 @@ class _EditprofileScreenState extends State<EditprofileScreen> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile updated successfully!")),
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          content: Text("Profile updated successfully!"),
+        ),
       );
       Navigator.pop(context);
     }
